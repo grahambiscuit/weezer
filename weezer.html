@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEEZER — Underground Coffee</title>
+</head>
+<body style="margin:0;">
+<div id="weezer-root"></div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+#weezer-root{
+  --ink:#0c0c0d;
+  --concrete:#171717;
+  --concrete-2:#222222;
+  --paper:#f1ede1;
+  --spray-orange:#ff5a1f;
+  --spray-acid:#dcff3d;
+  --brick:#b6361f;
+  --line: rgba(241,237,225,0.14);
+  font-family:'Space Grotesk',sans-serif;
+  background:var(--ink);
+  color:var(--paper);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+#weezer-root *{box-sizing:border-box;}
+.wz-display{font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.5px;}
+.wz-mono{font-family:'JetBrains Mono',monospace;}
+
+/* noise/grain texture */
+#weezer-root::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.05; mix-blend-mode:overlay;
+  background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0);
+  background-size: 3px 3px;
+}
+
+/* ===== NAV ===== */
+.wz-nav{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 32px;
+  background:rgba(12,12,13,0.85);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.wz-logo{
+  font-size:28px; color:var(--paper); position:relative; cursor:pointer; user-select:none;
+  text-shadow: 2px 0 var(--spray-orange), -2px 0 var(--brick);
+}
+.wz-nav-links{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+.wz-nav-links a{
+  color:var(--paper); text-decoration:none; font-size:13px; letter-spacing:1.5px; text-transform:uppercase;
+  font-weight:600; opacity:0.75; transition:opacity .2s, color .2s; position:relative;
+}
+.wz-nav-links a:hover, .wz-nav-links a:focus-visible{opacity:1; color:var(--spray-acid);}
+@media (max-width:720px){ .wz-nav-links{display:none;} }
+
+/* ===== HERO ===== */
+.wz-hero{
+  position:relative; min-height:92vh; display:flex; flex-direction:column; justify-content:center;
+  padding:60px 32px 80px; isolation:isolate;
+}
+.wz-hero::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:
+    repeating-linear-gradient(115deg, transparent 0 60px, rgba(255,90,31,0.05) 60px 62px),
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(220,255,61,0.07), transparent),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(182,54,31,0.12), transparent);
+}
+.wz-eyebrow{
+  font-family:'JetBrains Mono',monospace; color:var(--spray-acid); font-size:13px; letter-spacing:3px;
+  text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+}
+.wz-eyebrow::before{content:"●"; color:var(--brick); animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.wz-hero h1{
+  font-size:clamp(52px, 11vw, 150px); line-height:0.92; margin:0 0 24px; color:var(--paper);
+}
+.wz-hero h1 span{
+  display:block; color:var(--ink);
+  -webkit-text-stroke: 2px var(--paper);
+  position:relative;
+}
+.wz-hero h1 .spray{
+  color:var(--spray-orange); -webkit-text-stroke:none;
+  animation: drip 1.4s ease-out;
+  display:inline-block;
+}
+@keyframes drip{
+  0%{ clip-path: inset(0 0 100% 0); opacity:0; }
+  100%{ clip-path: inset(0 0 0% 0); opacity:1; }
+}
+@media (prefers-reduced-motion: reduce){ .wz-hero h1 .spray{animation:none;} }
+
+.wz-hero p.lede{
+  max-width:520px; font-size:18px; line-height:1.55; color:rgba(241,237,225,0.8); margin:0 0 36px;
+}
+.wz-hero-cta{display:flex; gap:16px; flex-wrap:wrap;}
+
+.wz-btn{
+  font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:1.5px; font-size:13px; font-weight:600;
+  padding:16px 26px; border:none; cursor:pointer; transition:transform .15s, box-shadow .15s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.wz-btn-primary{ background:var(--spray-acid); color:var(--ink); clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%); }
+.wz-btn-primary:hover{ transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--spray-orange); }
+.wz-btn-ghost{ background:transparent; color:var(--paper); border:1px solid var(--paper); clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%); }
+.wz-btn-ghost:hover{ background:var(--paper); color:var(--ink); }
+.wz-btn:focus-visible{ outline:2px solid var(--spray-acid); outline-offset:3px; }
+
+.wz-tagstack{
+  position:absolute; right:5%; bottom:8%; display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono',monospace;
+  font-size:12px; color:rgba(241,237,225,0.35); text-align:right;
+}
+@media (max-width:900px){ .wz-tagstack{display:none;} }
+
+/* ===== SECTION SHELL ===== */
+.wz-section{ padding:90px 32px; max-width:1200px; margin:0 auto; position:relative; }
+.wz-section-head{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:12px; margin-bottom:48px; border-bottom:1px solid var(--line); padding-bottom:18px;}
+.wz-section-head h2{ font-size:clamp(36px,5vw,58px); margin:0; color:var(--paper); }
+.wz-section-head .wz-tag{ font-family:'JetBrains Mono',monospace; color:var(--spray-orange); font-size:13px; letter-spacing:2px; text-transform:uppercase;}
+
+/* ===== MENU ===== */
+.wz-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:22px; }
+.wz-card{
+  background:var(--concrete); border:1px solid var(--line); padding:22px; position:relative; cursor:pointer;
+  transition:transform .18s, border-color .18s; overflow:hidden;
+}
+.wz-card:hover{ transform:translateY(-4px); border-color:var(--spray-orange); }
+.wz-card::after{
+  content:""; position:absolute; top:0; right:0; width:50px; height:50px;
+  background:linear-gradient(135deg, transparent 50%, var(--brick) 50%); opacity:0.7;
+}
+.wz-card-tag{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--spray-acid); letter-spacing:1.5px; text-transform:uppercase;}
+.wz-card h3{ font-size:26px; margin:8px 0 6px; color:var(--paper); }
+.wz-card p{ font-size:14px; color:rgba(241,237,225,0.65); margin:0 0 18px; line-height:1.5;}
+.wz-card-footer{ display:flex; justify-content:space-between; align-items:center; }
+.wz-price{ font-family:'JetBrains Mono',monospace; font-size:20px; color:var(--spray-acid); font-weight:600;}
+.wz-add{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:1px; text-transform:uppercase;
+  background:transparent; border:1px solid var(--paper); color:var(--paper); padding:8px 14px; cursor:pointer;
+}
+.wz-add:hover{ background:var(--spray-orange); border-color:var(--spray-orange); color:var(--ink); }
+
+/* ===== RECIPE MODAL ===== */
+.wz-modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:200; display:none; align-items:center; justify-content:center; padding:24px;
+}
+.wz-modal-overlay.open{ display:flex; }
+.wz-modal{
+  background:var(--concrete-2); border:1px solid var(--spray-orange); max-width:520px; width:100%; max-height:85vh; overflow-y:auto; padding:32px; position:relative;
+}
+.wz-modal-close{
+  position:absolute; top:14px; right:14px; background:none; border:none; color:var(--paper); font-size:22px; cursor:pointer; line-height:1;
+}
+.wz-modal h3{ font-size:30px; margin:0 0 4px; color:var(--spray-acid); }
+.wz-modal .wz-card-tag{ margin-bottom:14px; display:block; }
+.wz-modal-section-title{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--spray-orange); text-transform:uppercase; letter-spacing:1.5px; margin:22px 0 10px;}
+.wz-modal ul{ margin:0; padding-left:18px; line-height:1.7; color:rgba(241,237,225,0.85); font-size:14px;}
+.wz-modal ol{ margin:0; padding-left:18px; line-height:1.8; color:rgba(241,237,225,0.85); font-size:14px;}
+
+/* ===== AI CHAT ===== */
+.wz-ai-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+@media (max-width:800px){ .wz-ai-wrap{ grid-template-columns:1fr; } }
+.wz-ai-intro h3{ font-size:30px; margin:0 0 14px; color:var(--paper);}
+.wz-ai-intro p{ color:rgba(241,237,225,0.7); line-height:1.6; font-size:15px; margin-bottom:20px;}
+.wz-chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+.wz-chip{
+  font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--concrete); border:1px solid var(--line); color:var(--paper);
+  padding:8px 12px; cursor:pointer; text-transform:uppercase; letter-spacing:0.5px;
+}
+.wz-chip:hover{ border-color:var(--spray-acid); color:var(--spray-acid); }
+
+.wz-terminal{
+  background:#0a0a0a; border:1px solid var(--line); display:flex; flex-direction:column; height:480px; position:relative;
+}
+.wz-terminal-bar{
+  display:flex; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--line); background:var(--concrete);
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(241,237,225,0.6);
+}
+.wz-dot{ width:9px; height:9px; border-radius:50%; }
+.wz-terminal-log{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; font-size:14px; }
+.wz-msg{ max-width:88%; padding:10px 14px; line-height:1.5; }
+.wz-msg.user{ align-self:flex-end; background:var(--spray-orange); color:var(--ink); font-weight:500; }
+.wz-msg.bot{ align-self:flex-start; background:var(--concrete); color:var(--paper); border:1px solid var(--line); }
+.wz-msg.bot .wz-prompt{ color:var(--spray-acid); font-family:'JetBrains Mono',monospace; font-size:11px; display:block; margin-bottom:4px;}
+.wz-terminal-input{ display:flex; border-top:1px solid var(--line); }
+.wz-terminal-input input{
+  flex:1; background:transparent; border:none; color:var(--paper); padding:14px; font-family:'JetBrains Mono',monospace; font-size:14px; outline:none;
+}
+.wz-terminal-input button{
+  background:var(--spray-acid); border:none; color:var(--ink); padding:0 20px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700;
+}
+.wz-typing{ display:inline-flex; gap:4px; }
+.wz-typing span{ width:5px; height:5px; background:var(--spray-acid); border-radius:50%; animation:bounce 1s infinite; }
+.wz-typing span:nth-child(2){ animation-delay:.15s; }
+.wz-typing span:nth-child(3){ animation-delay:.3s; }
+@keyframes bounce{ 0%,100%{ transform:translateY(0); opacity:.4;} 50%{ transform:translateY(-4px); opacity:1; } }
+
+/* ===== MAP ===== */
+.wz-map-wrap{ position:relative; height:460px; border:1px solid var(--line); background:#111; overflow:hidden; }
+.wz-map-note{
+  position:absolute; top:14px; left:14px; z-index:5; background:rgba(12,12,13,0.85); border:1px solid var(--spray-orange);
+  font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--spray-acid);
+  padding:8px 12px;
+}
+.wz-map-card{
+  position:absolute; bottom:18px; left:18px; right:18px; z-index:5; background:rgba(12,12,13,0.92); border:1px solid var(--line);
+  padding:16px 18px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.wz-map-card h4{ margin:0 0 4px; font-size:18px; color:var(--paper); }
+.wz-map-card p{ margin:0; font-size:13px; color:rgba(241,237,225,0.6); font-family:'JetBrains Mono',monospace; }
+.wz-pin{
+  position:absolute; left:50%; top:46%; transform:translate(-50%,-100%); z-index:4; cursor:pointer;
+}
+.wz-pin svg{ filter:drop-shadow(0 6px 10px rgba(0,0,0,0.6)); animation:drop 0.6s ease; }
+@keyframes drop{ 0%{ transform:translateY(-40px); opacity:0;} 100%{ transform:translateY(0); opacity:1;} }
+.wz-pin-pulse{
+  position:absolute; left:50%; top:46%; width:14px; height:14px; border-radius:50%; background:var(--spray-orange);
+  transform:translate(-50%,-50%); z-index:3;
+}
+.wz-pin-pulse::after{
+  content:""; position:absolute; inset:0; border-radius:50%; background:var(--spray-orange); opacity:0.6;
+  animation:radar 1.8s infinite;
+}
+@keyframes radar{ 0%{ transform:scale(1); opacity:0.6;} 100%{ transform:scale(6); opacity:0;} }
+
+.wz-map-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(220,255,61,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220,255,61,0.06) 1px, transparent 1px);
+  background-size:34px 34px;
+  transform: perspective(600px) rotateX(48deg) scale(1.6) translateY(10%);
+  transform-origin:center bottom;
+}
+.wz-map-block{
+  position:absolute; background:linear-gradient(180deg, var(--concrete-2), var(--ink)); border:1px solid rgba(241,237,225,0.08);
+}
+
+/* ===== ORDER / FOOTER ===== */
+.wz-footer{
+  border-top:1px solid var(--line); padding:60px 32px 32px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:30px;
+}
+.wz-footer-brand{ font-size:34px; color:var(--paper); }
+.wz-footer-cols{ display:flex; gap:50px; flex-wrap:wrap; }
+.wz-footer-col h5{ font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--spray-orange); margin:0 0 12px;}
+.wz-footer-col a{ display:block; color:rgba(241,237,225,0.7); text-decoration:none; font-size:14px; margin-bottom:8px;}
+.wz-footer-col a:hover{ color:var(--spray-acid); }
+.wz-footer-bottom{ text-align:center; padding-top:30px; font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(241,237,225,0.35); width:100%; }
+
+.wz-toast{
+  position:fixed; bottom:24px; right:24px; background:var(--spray-acid); color:var(--ink); padding:14px 20px;
+  font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; z-index:300; transform:translateY(120%); transition:transform .3s ease;
+  text-transform:uppercase; letter-spacing:1px;
+}
+.wz-toast.show{ transform:translateY(0); }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+const MENU = [
+  {
+    id: 'm1', tag:'Signature / Espresso', name:'Concrete Jungle', price:'₱165',
+    desc:'Double ristretto over smoked-vanilla oat milk, charcoal salt rim.',
+    recipe:{
+      yields:'1 cup (12oz)',
+      ingredients:['2 shots ristretto espresso (18g dose)','120ml oat milk, steamed','10ml smoked vanilla syrup','Pinch of activated charcoal salt, for rim'],
+      steps:['Rim the glass with charcoal salt.','Pull double ristretto directly into the glass.','Steam oat milk to 60°C with smoked vanilla syrup mixed in.','Pour over espresso, leaving 1cm foam cap.','Serve with a steel straw — no plastic on these streets.']
+    }
+  },
+  {
+    id: 'm2', tag:'Cold Brew', name:'Skate Ramp Fizz', price:'₱180',
+    desc:'Nitro cold brew, blood-orange cascara tonic, citrus peel.',
+    recipe:{
+      yields:'1 tall glass (16oz)',
+      ingredients:['150ml nitro cold brew concentrate','90ml cascara (coffee cherry) tonic','30ml blood orange juice','Orange peel twist, ice'],
+      steps:['Fill glass with ice.','Pour cold brew concentrate first for the layered look.','Add blood orange juice slowly along the side of the glass.','Top with cascara tonic — pour high to keep the fizz alive.','Garnish with an orange peel twist, don\'t stir.']
+    }
+  },
+  {
+    id: 'm3', tag:'House Blend', name:'Underpass No.3', price:'₱150',
+    desc:'Dark roast drip, brown butter, smoked sea salt foam.',
+    recipe:{
+      yields:'1 mug (10oz)',
+      ingredients:['22g dark roast coffee, coarse ground','350ml filtered water, 94°C','10g brown butter, melted','Smoked sea salt foam (whipped cream + smoked salt)'],
+      steps:['Bloom grounds with 50ml water for 30 seconds.','Pour remaining water in slow spirals over 3 minutes total brew time.','Whisk brown butter into the hot brew until glossy.','Top with smoked sea salt foam.','Dust with extra smoked salt before serving.']
+    }
+  },
+  {
+    id: 'm4', tag:'Pastry / Bake', name:'Wheatpaste Croissant', price:'₱120',
+    desc:'Burnt-honey laminated croissant, espresso glaze.',
+    recipe:{
+      yields:'6 croissants',
+      ingredients:['500g laminated croissant dough (24-layer butter)','80g burnt honey','1 egg, beaten (wash)','40ml espresso glaze (espresso + powdered sugar)'],
+      steps:['Proof shaped croissants for 2 hours at room temp until jiggly.','Brush with egg wash.','Bake at 200°C for 16-18 minutes until deep amber.','Brush hot croissants with burnt honey immediately.','Drizzle espresso glaze once cooled for 10 minutes.']
+    }
+  },
+  {
+    id: 'm5', tag:'Limited Drop', name:'Graff Can Frappé', price:'₱195',
+    desc:'Blended mocha, spray-can color swirl (natural beet + spirulina), whipped cream.',
+    recipe:{
+      yields:'1 large cup (20oz)',
+      ingredients:['60ml espresso, chilled','200ml whole milk','30g dark chocolate, melted','Ice, 2 cups','Natural beet powder + spirulina powder for color swirl','Whipped cream'],
+      steps:['Blend espresso, milk, melted chocolate and ice until smooth.','Pour into cup, leaving 2cm headroom.','Mix tiny amounts of beet powder and spirulina with water separately.','Drizzle each color in a spiral around the inside of the cup before pouring frappé — graffiti drip effect.','Top with whipped cream and a final color drip.']
+    }
+  },
+  {
+    id: 'm6', tag:'Tea / Non-Coffee', name:'Curfew Chai', price:'₱140',
+    desc:'Black tea steeped with cracked pepper, oat milk, dark muscovado.',
+    recipe:{
+      yields:'1 mug (10oz)',
+      ingredients:['2 black tea bags (or 8g loose leaf)','250ml water','100ml oat milk','15g dark muscovado sugar','1/4 tsp cracked black pepper, cinnamon, cardamom, ginger'],
+      steps:['Simmer water with all spices for 5 minutes.','Add tea, steep 4 minutes off heat.','Strain into a pot, add oat milk, return to low heat.','Whisk in muscovado until dissolved, do not boil.','Pour hot, dust with extra cracked pepper.']
+    }
+  },
+];
+
+const QUICK_PROMPTS = [
+  "What's strongest on the menu?",
+  "Got something dairy-free?",
+  "How do I make the Underpass No.3 at home?",
+  "What's your most popular order?"
+];
+
+function RecipeModal({ item, onClose }){
+  if(!item) return null;
+  return (
+    <div className="wz-modal-overlay open" onClick={onClose}>
+      <div className="wz-modal" onClick={e=>e.stopPropagation()}>
+        <button className="wz-modal-close" onClick={onClose} aria-label="Close recipe">×</button>
+        <span className="wz-card-tag">{item.tag}</span>
+        <h3 className="wz-display">{item.name}</h3>
+        <p style={{color:'rgba(241,237,225,0.7)', fontSize:'14px'}}>{item.desc}</p>
+        <div className="wz-modal-section-title">Yields</div>
+        <p style={{fontSize:14, color:'rgba(241,237,225,0.85)'}}>{item.recipe.yields}</p>
+        <div className="wz-modal-section-title">Ingredients</div>
+        <ul>{item.recipe.ingredients.map((ing,i)=><li key={i}>{ing}</li>)}</ul>
+        <div className="wz-modal-section-title">Steps</div>
+        <ol>{item.recipe.steps.map((s,i)=><li key={i}>{s}</li>)}</ol>
+      </div>
+    </div>
+  );
+}
+
+function MenuSection({ onOrder, onRecipe }){
+  return (
+    <section className="wz-section" id="menu">
+      <div className="wz-section-head">
+        <h2 className="wz-display">The Menu</h2>
+        <span className="wz-tag">06 drops live</span>
+      </div>
+      <div className="wz-grid">
+        {MENU.map(item => (
+          <div className="wz-card" key={item.id} onClick={()=>onRecipe(item)} role="button" tabIndex={0}
+               onKeyDown={e=>{ if(e.key==='Enter') onRecipe(item); }}>
+            <span className="wz-card-tag wz-mono">{item.tag}</span>
+            <h3 className="wz-display">{item.name}</h3>
+            <p>{item.desc}</p>
+            <div className="wz-card-footer">
+              <span className="wz-price">{item.price}</span>
+              <button className="wz-add" onClick={(e)=>{ e.stopPropagation(); onOrder(item); }}>Add to bag</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AIChat(){
+  const [messages, setMessages] = useState([
+    { role:'bot', text:"Yo, I'm the WEEZER bot. Ask me about the menu, recipes, what's strong, what's sweet — whatever." }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const logRef = useRef(null);
+
+  useEffect(()=>{ if(logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight; }, [messages, loading]);
+
+  const menuContext = MENU.map(m => `${m.name} (${m.tag}, ${m.price}): ${m.desc}`).join('\n');
+
+  async function send(text){
+    if(!text.trim() || loading) return;
+    const userMsg = { role:'user', text };
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+    setLoading(true);
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+          model:"claude-sonnet-4-6",
+          max_tokens:300,
+          system: `You are the in-house AI for WEEZER, an underground hip-hop/skate/graffiti-styled coffee shop. Speak in a chill, confident, slightly slangy street voice — short sentences, no corporate fluff, no emoji spam. Use the menu below to answer questions about drinks, ingredients, recommendations, and recipes. If asked something unrelated to coffee/the shop, redirect playfully back to the menu. Keep answers under 80 words.\n\nMENU:\n${menuContext}`,
+          messages:[ ...messages.filter(m=>m.role!=='bot' || true).map(m=>({role: m.role==='bot'?'assistant':'user', content:m.text})), { role:'user', content:text } ]
+        })
+      });
+      const data = await response.json();
+      let botText = "Connection's spotty right now — try again in a sec.";
+      if(data && data.content){
+        botText = data.content.map(b => b.text || '').join('\n').trim() || botText;
+      }
+      setMessages(prev => [...prev, { role:'bot', text: botText }]);
+    } catch(err){
+      setMessages(prev => [...prev, { role:'bot', text:"Connection's down right now — the espresso machine probably tripped the wifi again. Try again in a bit." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="wz-section" id="ai">
+      <div className="wz-section-head">
+        <h2 className="wz-display">Ask The Bot</h2>
+        <span className="wz-tag">Live AI</span>
+      </div>
+      <div className="wz-ai-wrap">
+        <div className="wz-ai-intro">
+          <h3 className="wz-display">No menu's that deep.</h3>
+          <p>Ask about strength, sweetness, dairy-free options, or how to make any drink at home. The bot knows the whole menu, the recipes, and has opinions.</p>
+          <div className="wz-chip-row">
+            {QUICK_PROMPTS.map((q,i)=>(
+              <button className="wz-chip" key={i} onClick={()=>send(q)}>{q}</button>
+            ))}
+          </div>
+        </div>
+        <div className="wz-terminal">
+          <div className="wz-terminal-bar">
+            <span className="wz-dot" style={{background:'#ff5a1f'}}></span>
+            <span className="wz-dot" style={{background:'#dcff3d'}}></span>
+            <span className="wz-dot" style={{background:'#444'}}></span>
+            <span style={{marginLeft:8}}>weezer-bot ~ counter-terminal</span>
+          </div>
+          <div className="wz-terminal-log" ref={logRef}>
+            {messages.map((m,i)=>(
+              <div className={`wz-msg ${m.role}`} key={i}>
+                {m.role==='bot' && <span className="wz-prompt">WEEZER_BOT$</span>}
+                {m.text}
+              </div>
+            ))}
+            {loading && (
+              <div className="wz-msg bot">
+                <span className="wz-prompt">WEEZER_BOT$</span>
+                <span className="wz-typing"><span></span><span></span><span></span></span>
+              </div>
+            )}
+          </div>
+          <div className="wz-terminal-input">
+            <input
+              value={input}
+              onChange={e=>setInput(e.target.value)}
+              onKeyDown={e=>{ if(e.key==='Enter') send(input); }}
+              placeholder="Type your question..."
+              aria-label="Ask the WEEZER bot a question"
+            />
+            <button onClick={()=>send(input)} disabled={loading}>SEND</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MapSection(){
+  return (
+    <section className="wz-section" id="location">
+      <div className="wz-section-head">
+        <h2 className="wz-display">Find The Spot</h2>
+        <span className="wz-tag">Example location</span>
+      </div>
+      <div className="wz-map-wrap">
+        <div className="wz-map-note wz-mono">⚠ Illustrative map — not a real address</div>
+        <div className="wz-map-grid">
+          <div className="wz-map-block" style={{left:'10%', top:'20%', width:'120px', height:'160px'}}></div>
+          <div className="wz-map-block" style={{left:'30%', top:'40%', width:'90px', height:'120px'}}></div>
+          <div className="wz-map-block" style={{left:'55%', top:'15%', width:'140px', height:'100px'}}></div>
+          <div className="wz-map-block" style={{left:'70%', top:'45%', width:'100px', height:'150px'}}></div>
+          <div className="wz-map-block" style={{left:'15%', top:'55%', width:'160px', height:'90px'}}></div>
+          <div className="wz-map-block" style={{left:'45%', top:'60%', width:'110px', height:'110px'}}></div>
+        </div>
+        <div className="wz-pin-pulse"></div>
+        <div className="wz-pin">
+          <svg width="34" height="44" viewBox="0 0 34 44">
+            <path d="M17 0C7.6 0 0 7.6 0 17c0 12 17 27 17 27s17-15 17-27C34 7.6 26.4 0 17 0z" fill="#ff5a1f"/>
+            <circle cx="17" cy="17" r="7" fill="#0c0c0d"/>
+          </svg>
+        </div>
+        <div className="wz-map-card">
+          <div>
+            <h4 className="wz-display" style={{fontSize:'20px'}}>WEEZER — Underpass Block</h4>
+            <p>123 Skate Park Ave, somewhere underground · Open 6AM–11PM</p>
+          </div>
+          <button className="wz-btn wz-btn-ghost" style={{padding:'10px 18px', fontSize:11}}>Get Directions</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function App(){
+  const [recipeItem, setRecipeItem] = useState(null);
+  const [toast, setToast] = useState('');
+  const toastTimer = useRef(null);
+
+  function showToast(msg){
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(()=> setToast(''), 2200);
+  }
+
+  function onOrder(item){
+    showToast(`${item.name} added to bag`);
+  }
+
+  return (
+    <React.Fragment>
+      <nav className="wz-nav">
+        <div className="wz-logo wz-display">WEEZER</div>
+        <ul className="wz-nav-links">
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#ai">Ask The Bot</a></li>
+          <li><a href="#location">Location</a></li>
+        </ul>
+        <button className="wz-btn wz-btn-primary" style={{padding:'10px 18px', fontSize:11}} onClick={()=>showToast('Bag is empty — go add some coffee!')}>Bag (0)</button>
+      </nav>
+
+      <section className="wz-hero">
+        <div className="wz-eyebrow wz-mono">Underground / Since whenever / Brewed loud</div>
+        <h1 className="wz-display">
+          DRINK <span className="spray">LOUD.</span><br/>
+          <span>SKATE</span> FUELED.
+        </h1>
+        <p className="lede">WEEZER is the coffee counter under the ramp — graffiti on the walls, espresso on tap, and a bot at the register that actually knows the menu. Order online, learn the recipe, skip the line.</p>
+        <div className="wz-hero-cta">
+          <a href="#menu" className="wz-btn wz-btn-primary">Shop The Menu</a>
+          <a href="#ai" className="wz-btn wz-btn-ghost">Ask The Bot</a>
+        </div>
+        <div className="wz-tagstack wz-mono">
+          <span>EST. UNDERPASS</span>
+          <span>NO CORPORATE FLAVOR</span>
+          <span>EVERY CUP TAGGED</span>
+        </div>
+      </section>
+
+      <MenuSection onOrder={onOrder} onRecipe={setRecipeItem} />
+      <AIChat />
+      <MapSection />
+
+      <footer className="wz-footer">
+        <div className="wz-footer-brand wz-display">WEEZER</div>
+        <div className="wz-footer-cols">
+          <div className="wz-footer-col">
+            <h5>Shop</h5>
+            <a href="#menu">Menu</a>
+            <a href="#menu">Limited Drops</a>
+            <a href="#ai">Ask The Bot</a>
+          </div>
+          <div className="wz-footer-col">
+            <h5>Visit</h5>
+            <a href="#location">Location</a>
+            <a href="#location">Hours</a>
+          </div>
+          <div className="wz-footer-col">
+            <h5>Socials</h5>
+            <a href="#">Instagram</a>
+            <a href="#">TikTok</a>
+          </div>
+        </div>
+        <div className="wz-footer-bottom">WEEZER COFFEE — BREWED UNDERGROUND. ALL RECIPES TESTED ON THE STREET.</div>
+      </footer>
+
+      <RecipeModal item={recipeItem} onClose={()=>setRecipeItem(null)} />
+      <div className={`wz-toast ${toast ? 'show':''}`}>{toast}</div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('weezer-root')).render(<App />);
+</script>
+</body>
+</html>
